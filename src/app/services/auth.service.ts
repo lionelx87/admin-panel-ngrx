@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "@angular/fire/auth";
 
 @Injectable({
@@ -13,6 +14,13 @@ import {
 })
 export class AuthService {
   constructor(private authFirebase: Auth) {}
+
+  initAuthListener() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      console.log(user);
+    });
+  }
 
   createUser(user: UserRegister) {
     console.log(user);
