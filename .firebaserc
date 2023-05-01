@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "admin-ngrx": {
+      "hosting": {
+        "ingreso-egreso": [
+          "admin-ngrx"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "admin-ngrx"
+  }
+}
