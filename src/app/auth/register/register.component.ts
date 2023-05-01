@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { UserRegister } from "src/app/models/user.model";
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
   selector: "app-register",
@@ -9,7 +12,11 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   get validName(): boolean {
     return this.registerForm.get("name").valid;
@@ -32,8 +39,15 @@ export class RegisterComponent implements OnInit {
   }
 
   createUser() {
-    console.log(this.registerForm);
-    console.log(this.registerForm.valid);
-    console.log(this.registerForm.value);
+    if (this.registerForm.valid) {
+      const { name, email, password }: UserRegister = this.registerForm.value;
+      this.authService
+        .createUser({ name, email, password })
+        .then((credenciales) => {
+          console.log(credenciales);
+          this.router.navigate(["/"]);
+        })
+        .catch((err) => console.error(err));
+    }
   }
 }
