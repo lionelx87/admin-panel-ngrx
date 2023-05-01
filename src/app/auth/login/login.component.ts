@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { UserLogin } from "src/app/models/user.model";
 import { AuthService } from "src/app/services/auth.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-login",
@@ -36,10 +37,19 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.loginForm.valid) {
       const { email, password }: UserLogin = this.loginForm.value;
-      this.authService.login({ email, password }).then((userCredential) => {
-        console.log(userCredential);
-        this.router.navigate(["/"]);
-      });
+      this.authService
+        .login({ email, password })
+        .then((userCredential) => {
+          console.log(userCredential);
+          this.router.navigate(["/"]);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.message,
+          });
+        });
     }
   }
 }
