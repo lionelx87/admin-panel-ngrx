@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { UserLogin, UserRegister } from "../models/user.model";
+import { UserLogged, UserLogin, UserRegister } from "../models/user.model";
 import {
   Auth,
   getAuth,
@@ -8,12 +8,19 @@ import {
   signOut,
   onAuthStateChanged,
 } from "@angular/fire/auth";
+import {
+  Firestore,
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  constructor(private authFirebase: Auth) {}
+  constructor(private authFirebase: Auth, private db: Firestore) {}
 
   initAuthListener() {
     const auth = getAuth();
@@ -25,7 +32,19 @@ export class AuthService {
   createUser(user: UserRegister) {
     console.log(user);
     const auth = getAuth();
-    return createUserWithEmailAndPassword(auth, user.email, user.password);
+    return createUserWithEmailAndPassword(auth, user.email, user.password).then(
+      (fbUser: any) => {
+        const newUser: UserLogged = {
+          uid: fbUser.user.uid,
+          name: user.name,
+          email: fbUser.user.email,
+        };
+
+        return setDoc(doc(this.db, fbUser.user.uid, "user"), newUser); // doc(instance, collection, document)
+
+        // return addDoc(collection(this.db, `${fbUser.user.uid}/user`), newUser);
+      }
+    );
   }
 
   login(user: UserLogin) {
