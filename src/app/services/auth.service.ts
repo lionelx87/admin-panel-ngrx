@@ -38,4 +38,10 @@ export class AuthService {
     const auth = getAuth();
     return signOut(auth);
   }
+
+  isAuth() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    return user;
+  }
 }
