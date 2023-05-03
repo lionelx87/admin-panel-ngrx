@@ -1,8 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { Subscription } from "rxjs";
+import { AppState } from "src/app/app.reducer";
 import { UserRegister } from "src/app/models/user.model";
 import { AuthService } from "src/app/services/auth.service";
+import { isLoading, stopLoading } from "src/app/shared/ui.actions";
 import Swal from "sweetalert2";
 
 @Component({
@@ -10,13 +14,15 @@ import Swal from "sweetalert2";
   templateUrl: "./register.component.html",
   styles: [],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
+  uiSubscription: Subscription;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {}
 
   get validName(): boolean {
@@ -37,10 +43,15 @@ export class RegisterComponent implements OnInit {
       email: ["", [Validators.required, Validators.email]],
       password: ["", Validators.required],
     });
+
+    this.uiSubscription = this.store.select("ui").subscribe((ui) => {
+      console.log(ui.isLoading);
+    });
   }
 
   createUser() {
     if (this.registerForm.valid) {
+      this.store.dispatch(isLoading());
       const { name, email, password }: UserRegister = this.registerForm.value;
       this.authService
         .createUser({ name, email, password })
@@ -54,7 +65,12 @@ export class RegisterComponent implements OnInit {
             title: "Oops...",
             text: err.message,
           });
-        });
+        })
+        .finally(() => this.store.dispatch(stopLoading()));
     }
+  }
+
+  ngOnDestroy(): void {
+    this.uiSubscription.unsubscribe();
   }
 }
