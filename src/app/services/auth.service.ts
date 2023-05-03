@@ -13,6 +13,7 @@ import {
   addDoc,
   collection,
   doc,
+  onSnapshot,
   setDoc,
 } from "@angular/fire/firestore";
 import { Store } from "@ngrx/store";
@@ -32,7 +33,12 @@ export class AuthService {
   initAuthListener() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      console.log('Prueba: ', user);
+
+      onSnapshot(doc(this.db, user?.uid, 'user'), (doc) => {
+        console.log('DATA: ', doc.data());
+      });
+
       // this.store.dispatch( user ? setUser(user) )
     });
   }
