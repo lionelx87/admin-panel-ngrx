@@ -15,17 +15,25 @@ import {
   doc,
   setDoc,
 } from "@angular/fire/firestore";
+import { Store } from "@ngrx/store";
+import { AppState } from "../app.reducer";
+import { setUser } from "../auth/auth.actions";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  constructor(private authFirebase: Auth, private db: Firestore) {}
+  constructor(
+    private authFirebase: Auth,
+    private db: Firestore,
+    private store: Store<AppState>
+  ) {}
 
   initAuthListener() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       console.log(user);
+      // this.store.dispatch( user ? setUser(user) )
     });
   }
 
