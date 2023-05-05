@@ -25,11 +25,17 @@ import { unSetUser } from "../auth/auth.actions";
   providedIn: "root",
 })
 export class AuthService {
+  private _user: UserLogged;
+
   constructor(
     private authFirebase: Auth,
     private db: Firestore,
     private store: Store<AppState>
   ) {}
+
+  get user() {
+    return { ...this._user };
+  }
 
   initAuthListener() {
     const auth = getAuth();
@@ -42,9 +48,11 @@ export class AuthService {
             name: data.name,
             email: data.email,
           };
+          this._user = userLogged;
           this.store.dispatch(setUser({ user: userLogged }));
         });
       } else {
+        this._user = null;
         this.store.dispatch(unSetUser());
       }
     });

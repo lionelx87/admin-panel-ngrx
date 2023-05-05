@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { EntryExit } from "../models/entry-exit.model";
+import { EntryExitService } from "../services/entry-exit.service";
 
 @Component({
   selector: "app-ingreso-egreso",
@@ -10,7 +12,10 @@ export class IngresoEgresoComponent implements OnInit {
   entryForm: FormGroup;
   type: string = "entry";
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private entryExitService: EntryExitService
+  ) {}
 
   ngOnInit() {
     this.entryForm = this.fb.group({
@@ -23,6 +28,16 @@ export class IngresoEgresoComponent implements OnInit {
     if (this.entryForm.valid) {
       console.log(this.entryForm.value);
       console.log(this.type);
+
+      const { description, amount } = this.entryForm.value;
+
+      const entryExit: EntryExit = {
+        description,
+        amount,
+        type: this.type,
+      };
+
+      this.entryExitService.createEntryExit(entryExit);
     }
   }
 }
