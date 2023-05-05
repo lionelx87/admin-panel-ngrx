@@ -19,6 +19,7 @@ import {
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.reducer";
 import { setUser } from "../auth/auth.actions";
+import { unSetUser } from "../auth/auth.actions";
 
 @Injectable({
   providedIn: "root",
@@ -33,18 +34,23 @@ export class AuthService {
   initAuthListener() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-      console.log('Prueba: ', user);
-
-      onSnapshot(doc(this.db, user?.uid, 'user'), (doc) => {
-        console.log('DATA: ', doc.data());
-      });
-
-      // this.store.dispatch( user ? setUser(user) )
+      if (user) {
+        onSnapshot(doc(this.db, user?.uid, "user"), (doc) => {
+          const data = doc.data();
+          const userLogged: UserLogged = {
+            uid: data.uid,
+            name: data.name,
+            email: data.email,
+          };
+          this.store.dispatch(setUser({ user: userLogged }));
+        });
+      } else {
+        this.store.dispatch(unSetUser());
+      }
     });
   }
 
   createUser(user: UserRegister) {
-    console.log(user);
     const auth = getAuth();
     return createUserWithEmailAndPassword(auth, user.email, user.password).then(
       (fbUser: any) => {
@@ -62,7 +68,6 @@ export class AuthService {
   }
 
   login(user: UserLogin) {
-    console.log(user);
     const auth = getAuth();
     return signInWithEmailAndPassword(auth, user.email, user.password);
   }
