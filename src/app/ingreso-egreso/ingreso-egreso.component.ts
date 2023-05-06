@@ -19,8 +19,8 @@ export class IngresoEgresoComponent implements OnInit {
 
   ngOnInit() {
     this.entryForm = this.fb.group({
-      description: ["", Validators.required],
-      amount: ["", Validators.required],
+      description: ["prueba", Validators.required],
+      amount: ["20", Validators.required],
     });
   }
 
