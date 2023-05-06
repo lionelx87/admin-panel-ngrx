@@ -15,11 +15,13 @@ import { AuthService } from "./auth.service";
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(): boolean {
-    const isLogged = this.authService.isAuth();
-    if (!isLogged) {
-      this.router.navigate(["/login"]);
-    }
-    return !!isLogged;
+  canActivate(): Promise<boolean> {
+    return this.authService.isAuth().then((isLogged) => {
+      if (!isLogged) {
+        this.router.navigate(["/login"]);
+        return;
+      }
+      return isLogged;
+    });
   }
 }

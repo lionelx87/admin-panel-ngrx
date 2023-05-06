@@ -20,6 +20,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../app.reducer";
 import { setUser } from "../auth/auth.actions";
 import { unSetUser } from "../auth/auth.actions";
+import { map } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -86,8 +87,11 @@ export class AuthService {
   }
 
   isAuth() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    return user;
+    return new Promise<boolean>((resolve, reject) => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        resolve(!!user);
+      });
+    });
   }
 }
