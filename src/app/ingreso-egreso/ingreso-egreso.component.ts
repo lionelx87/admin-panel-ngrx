@@ -26,9 +26,6 @@ export class IngresoEgresoComponent implements OnInit {
 
   save() {
     if (this.entryForm.valid) {
-      console.log(this.entryForm.value);
-      console.log(this.type);
-
       const { description, amount } = this.entryForm.value;
 
       const entryExit: EntryExit = {
