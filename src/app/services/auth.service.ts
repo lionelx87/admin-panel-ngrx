@@ -21,6 +21,7 @@ import { AppState } from "../app.reducer";
 import { setUser } from "../auth/auth.actions";
 import { unSetUser } from "../auth/auth.actions";
 import { map } from "rxjs";
+import { unSetItems } from "../ingreso-egreso/ingreso-egreso.actions";
 
 @Injectable({
   providedIn: "root",
@@ -55,6 +56,7 @@ export class AuthService {
       } else {
         this._user = null;
         this.store.dispatch(unSetUser());
+        this.store.dispatch( unSetItems() );
       }
     });
   }
