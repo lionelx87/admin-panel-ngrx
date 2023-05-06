@@ -17,11 +17,9 @@ export class EntryExitService {
   }
 
   async initEntryExitListener(uid: string) {
-    onSnapshot(collection(this.db, uid, "entry-exit", 'items'), (docs) => {
-      docs.forEach( (doc) => {
-        console.log('id: ', doc.id);
-        console.log('data: ', doc.data());
-      });
+    onSnapshot(collection(this.db, uid, "entry-exit", 'items'), ({ docs }) => {
+      const items = docs.map( doc => ({uid: doc.id, ...doc.data()}) );
+      console.log(items);
     })
   }
 }
