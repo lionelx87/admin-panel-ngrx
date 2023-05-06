@@ -3,6 +3,7 @@ import { Firestore, addDoc, collection, doc, getDoc, onSnapshot } from "@angular
 import { EntryExit } from "../models/entry-exit.model";
 import { AuthService } from "./auth.service";
 import { getAuth } from "@angular/fire/auth";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -16,10 +17,12 @@ export class EntryExitService {
     return addDoc(collection(prueba, "entry-exit", "items"), entryExit);
   }
 
-  async initEntryExitListener(uid: string) {
-    onSnapshot(collection(this.db, uid, "entry-exit", 'items'), ({ docs }) => {
-      const items = docs.map( doc => ({uid: doc.id, ...doc.data()}) );
-      console.log(items);
+  initEntryExitListener(uid: string) {
+    return new Observable(observer => {
+      onSnapshot(collection(this.db, uid, "entry-exit", 'items'), ({ docs }) => {
+        const items = docs.map( doc => ({uid: doc.id, ...doc.data()}) );
+        observer.next(items);
+      });
     })
   }
 }
