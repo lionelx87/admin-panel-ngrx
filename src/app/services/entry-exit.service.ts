@@ -12,7 +12,6 @@ export class EntryExitService {
   createEntryExit(entryExit: EntryExit) {
     const uid = this.authService.user.uid;
     const prueba = collection(this.db, uid);
-    addDoc(collection(prueba, "entry-exit", "items"), entryExit);
-    console.log("Punto de inserción: ", prueba);
+    return addDoc(collection(prueba, "entry-exit", "items"), entryExit);
   }
 }
