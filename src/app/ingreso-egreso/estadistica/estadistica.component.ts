@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducer';
 import { EntryExit } from 'src/app/models/entry-exit.model';
+import { ChartData, ChartEvent, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-estadistica',
@@ -9,6 +11,16 @@ import { EntryExit } from 'src/app/models/entry-exit.model';
   styles: []
 })
 export class EstadisticaComponent implements OnInit {
+  // Doughnut
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  public doughnutChartLabels: string[] = [ 'Ingresos', 'Egresos'];
+  public doughnutChartData: ChartData<'doughnut'> = {
+    labels: this.doughnutChartLabels,
+    datasets: [
+      { data: [] },
+    ]
+  };
+  public doughnutChartType: ChartType = 'doughnut';
 
   entry: number = 0;
   exit: number = 0;
@@ -31,6 +43,12 @@ export class EstadisticaComponent implements OnInit {
         this.exit ++;
       }
     }
+
+    this.doughnutChartData.datasets = [{
+      data: [ this.totalEntry, this.totalExit ]
+    }];
+
+    this.chart?.chart?.update();
 
   }
 
