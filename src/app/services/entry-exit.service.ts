@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Firestore, addDoc, collection, doc, getDoc, onSnapshot } from "@angular/fire/firestore";
+import { Firestore, addDoc, collection, deleteDoc, doc, onSnapshot } from "@angular/fire/firestore";
+import { Observable } from "rxjs";
 import { EntryExit } from "../models/entry-exit.model";
 import { AuthService } from "./auth.service";
-import { getAuth } from "@angular/fire/auth";
-import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -24,5 +23,13 @@ export class EntryExitService {
         observer.next(items);
       });
     })
+  }
+
+  deleteEntryExit(uid: string) {
+    const user = this.authService.user.uid;
+    const docEntryExit = doc(this.db, `${user}/entry-exit`);
+    const items = collection(docEntryExit, 'items');
+    const docRef = doc(items, uid);
+    return deleteDoc(docRef);
   }
 }

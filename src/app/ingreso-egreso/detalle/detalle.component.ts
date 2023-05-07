@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/app.reducer';
 import { EntryExit } from 'src/app/models/entry-exit.model';
+import { EntryExitService } from 'src/app/services/entry-exit.service';
 
 @Component({
   selector: 'app-detalle',
@@ -13,7 +14,7 @@ export class DetalleComponent implements OnInit, OnDestroy {
   entryExit: EntryExit[];
   entryExitSub: Subscription;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>, private entryExitService: EntryExitService) { }
 
   ngOnInit() {
     this.entryExitSub = this.store.select('entryExit').subscribe(({ items }) => {
@@ -22,7 +23,7 @@ export class DetalleComponent implements OnInit, OnDestroy {
   }
 
   delete(uid: string) {
-    console.log(uid);
+    this.entryExitService.deleteEntryExit(uid).then(() => console.log('Eliminado correctamente!'));
   }
 
   ngOnDestroy(): void {
