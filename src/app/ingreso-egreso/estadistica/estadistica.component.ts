@@ -34,6 +34,10 @@ export class EstadisticaComponent implements OnInit {
   }
 
   generateStatistics(items: EntryExit[]) {
+    this.entry = 0;
+    this.exit = 0;
+    this.totalEntry = 0;
+    this.totalExit = 0;
     for(const item of items) {
       if(item.type === 'entry') {
         this.totalEntry += item.amount;
