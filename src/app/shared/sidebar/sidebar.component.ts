@@ -11,14 +11,18 @@ import { AuthService } from "src/app/services/auth.service";
   styles: [],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-  fullName: string = '';
+  fullName: string = "";
   userSub: Subscription;
 
-  constructor(private store: Store<AppState>, private authService: AuthService, private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.userSub = this.store.select('auth').subscribe( ({ user }) => {
-      this.fullName = user.name;
+    this.userSub = this.store.select("auth").subscribe(({ user }) => {
+      this.fullName = user?.name;
     });
   }
 
