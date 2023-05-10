@@ -23,8 +23,8 @@ export class IngresoEgresoComponent implements OnInit {
 
   ngOnInit() {
     this.entryForm = this.fb.group({
-      description: ["prueba", Validators.required],
-      amount: ["20", Validators.required],
+      description: ["", Validators.required],
+      amount: ["", Validators.required],
     });
   }
 
@@ -41,7 +41,7 @@ export class IngresoEgresoComponent implements OnInit {
 
       this.entryExitService
         .createEntryExit(entryExit)
-        .then( () => this.entryForm.reset())
+        .then(() => this.entryForm.reset())
         .finally(() => this.store.dispatch(stopLoading()));
     }
   }
