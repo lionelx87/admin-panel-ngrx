@@ -13,15 +13,12 @@ import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
 import { appReducers } from "./app.reducer";
 import { AuthModule } from "./auth/auth.module";
-import { IngresoEgresoModule } from "./ingreso-egreso/ingreso-egreso.module";
-import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     AuthModule,
-    IngresoEgresoModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
